@@ -1,0 +1,4 @@
+##ignore this file##
+/venv/Lib/
+# Project exclude paths
+/venv/
