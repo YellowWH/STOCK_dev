@@ -34,7 +34,13 @@ print(code_list)
 for code in code_list:
     csv_name = "code_" + code + ".csv"
     code_data = ts.pro_bar(ts_code=code, start_date='20190401', end_date='20200825')
-    code_data.to_csv("stock_spilt_by_code//"+csv_name)
+    date = code_data.shape[0]
+    for count in range(0, code_data.shape[0]):
+        print(code_data.iloc[count, 1])
+        code_data.iloc[count, 1] = date
+        date -= 1
+    print(code_data)
+    code_data.to_csv("stock_spilt_by_code//sort_date//"+csv_name)
 
 # 建立三维数组保存为numpy
 
