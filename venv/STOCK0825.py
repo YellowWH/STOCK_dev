@@ -26,16 +26,16 @@ ts.set_token('bc0bfe57b6acaa3e8941931566e97186de1143d43061a8f1bdb7d186')
 
 # 把需要的数据整理成csv
 
-# data1 = pd.read_csv("employee1.csv",header=0)
-# print(data1)
-# s=data1['ts_code'].values.tolist()
-# print(s)
-# d=""
-# for si in s:
-#     d = d + si + ","
-#
-# print(d)
-# data = ts.pro_bar(ts_code=d, start_date='20190824', end_date='20200824')
-#
-# data.to_csv("stock1.csv")
+data = pd.read_csv("employee1.csv",header=0)
+print(data)
+code_list = data['ts_code'].values.tolist()
+print(code_list)
+
+for code in code_list:
+    csv_name = "code_" + code + ".csv"
+    code_data = ts.pro_bar(ts_code=code, start_date='20190401', end_date='20200825')
+    code_data.to_csv("stock_spilt_by_code//"+csv_name)
+
+# 建立三维数组保存为numpy
+
 
