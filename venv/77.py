@@ -45,6 +45,8 @@ model.add(Dense(10,activation="softmax"))
 
 adam = Adam(lr=1e-4)
 
+model.summary()
+
 model.compile(optimizer=adam,
               loss="categorical_crossentropy",
               metrics=["accuracy"])

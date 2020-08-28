@@ -31,16 +31,52 @@ print(data)
 code_list = data['ts_code'].values.tolist()
 print(code_list)
 
+# 保存为有序或者按日期的csv
+
+# for code in code_list:
+#     csv_name = "code_" + code + ".csv"
+#     code_data = ts.pro_bar(ts_code=code, start_date='20190401', end_date='20200825')
+#     date = code_data.shape[0]
+#     for count in range(0, code_data.shape[0]):
+#         print(code_data.iloc[count, 1])
+#         code_data.iloc[count, 1] = date
+#         date -= 1
+#     print(code_data)
+#     code_data.to_csv("stock_spilt_by_code//sort_date//"+csv_name)
+
+
+
+# 保存为训练用初步数据集
+X = []
+Y = []
+
 for code in code_list:
     csv_name = "code_" + code + ".csv"
     code_data = ts.pro_bar(ts_code=code, start_date='20190401', end_date='20200825')
     date = code_data.shape[0]
+    datein = code_data.shape[0]
     for count in range(0, code_data.shape[0]):
         print(code_data.iloc[count, 1])
         code_data.iloc[count, 1] = date
         date -= 1
-    print(code_data)
-    code_data.to_csv("stock_spilt_by_code//sort_date//"+csv_name)
+    if datein > 30:
+        # i表示一个表里面可以生成多少 对 数据 比如 50天的数据就可以生成20对数据
+        i = datein - 30
+        code_data = code_data.drop(["ts_code"], axis=1)
+        code_data1 = code_data
+        code_data = code_data.apply(lambda x: (x - np.mean(x)) / (np.max(x) - np.min(x)))
+        for counti in range(i):
+            foo = []
+            for count30 in range(29, -1, -1):
+                foo.append(np.array(code_data.iloc[counti+count30+1, 1:10]))
+            Y.append(np.array((code_data1.iloc[counti, 2])))
+            X.append(foo)
+
+
+print(len(X), len(Y))
+np.save("X.npy", X)
+np.save("Y.npy", Y)
+
 
 # 建立三维数组保存为numpy
 
