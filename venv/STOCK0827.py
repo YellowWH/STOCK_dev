@@ -18,27 +18,29 @@ from keras.optimizers import Adam
 from keras import initializers
 import random
 import matplotlib.pyplot as plt
+import time
 
 X = np.load("X.npy")
 Y = np.load("Y.npy")
+tianshu = 30
 
 # 训练回数
-epoch_num = 1000
-dropout = 0
-png_name = "epoch_" + str(epoch_num) + "drop_" + str(dropout) + "0901分類7.png"
-svg_name = "epoch_" + str(epoch_num) + "drop_" + str(dropout) + "0901分類7.svg"
+epoch_num = 500
+dropout = 0.2
+png_name = "pyplot//epoch_" + str(epoch_num) + "drop_" + str(dropout) + "0901分類7.png"
+svg_name = "pyplot//epoch_" + str(epoch_num) + "drop_" + str(dropout) + "0901分類7.svg"
 
 # 还没做标准化！！！！！！！！！！
 
 # 分组
 asd = max(Y)
 print(Y[Y <= -0.0], Y[Y >= 0.2])
-Y = np.clip(Y, 0, 0.2)
+Y = np.clip(Y, 0.0, 0.2)
 print(Y[Y <= -0.0], Y[Y >= 0.2])
 Y_category = []
 for i in range(0, Y.size):
-    temp = [0] * 7
-    index = int(Y[i] * 100/3)
+    temp = [0] * 21
+    index = int(Y[i] * 100)
     temp[index] = 1
     Y_category.append(temp)
 Y_category_new = np.array(Y_category)
@@ -56,18 +58,18 @@ Y_category_new = Y_category_new[randomList, :]
 # 分开成训练组和test组
 randomTestList = random.sample(range(0, X.shape[0]), 1000)
 X_test = X[randomTestList]
-X_test1 = X_test.reshape(1000, 30 * 9)
+X_test1 = X_test.reshape(1000, tianshu * 9)
 Y_test = Y_category_new[randomTestList]
 X_train = np.delete(X, randomTestList, 0)
 Y_train = np.delete(Y_category_new, randomTestList, 0)
 
 model = Sequential()
-model.add(LSTM(40, activation='relu', input_shape=(30, 9)))
+model.add(LSTM(40, activation='relu', input_shape=(tianshu, 9)))
 model.add(Dropout(rate=dropout))
-model.add(Dense(7, activation="softmax"))
+model.add(Dense(21, activation="softmax"))
 adam = Adam()
 model.compile(optimizer=adam,
-              loss="categorical_crossentropy",
+              loss="mse",
               metrics=["acc"])
 model.summary()
 
@@ -107,3 +109,8 @@ print("\n testing---------------")
 loss, accuracy = model.evaluate(X_test, Y_test)
 print("\n test loss", loss)
 print("\n test accuracy", accuracy)
+
+
+today = time.strftime("%Y-%m-%d",time.localtime(time.time()))
+model.save('model_weight//'+today+'model_weight.h5')
+
