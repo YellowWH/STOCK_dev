@@ -58,7 +58,7 @@ class colors:
 
 
 # 模型和数据的参数
-TRAINING_SIZE = 50000
+TRAINING_SIZE = 4
 DIGITS = 3
 REVERSE = True
 
