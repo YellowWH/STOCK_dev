@@ -14,7 +14,7 @@ from keras.utils import np_utils
 from keras.models import Sequential, load_model
 from keras import backend
 from keras.layers import Dense, Activation, Convolution2D, MaxPooling2D, Flatten, LSTM, Dropout
-from keras.optimizers import Adam
+from keras.optimizers import Adam, RMSprop
 from keras import initializers
 import random
 import matplotlib.pyplot as plt
@@ -26,11 +26,10 @@ tianshu = 30
 
 # 训练回数
 epoch_num = 500
-dropout = 0.2
+dropout = 0
 png_name = "pyplot//epoch_" + str(epoch_num) + "drop_" + str(dropout) + "0901分類7.png"
 svg_name = "pyplot//epoch_" + str(epoch_num) + "drop_" + str(dropout) + "0901分類7.svg"
 
-# 还没做标准化！！！！！！！！！！
 
 # 分组
 asd = max(Y)
@@ -44,6 +43,8 @@ for i in range(0, Y.size):
     temp[index] = 1
     Y_category.append(temp)
 Y_category_new = np.array(Y_category)
+
+Y = Y * 100
 
 # 洗牌
 np.random.seed(10)
@@ -64,11 +65,13 @@ X_train = np.delete(X, randomTestList, 0)
 Y_train = np.delete(Y_category_new, randomTestList, 0)
 
 model = Sequential()
-model.add(LSTM(40, activation='relu', input_shape=(tianshu, 9)))
+model.add(LSTM(128, activation='relu', input_shape=(tianshu, 9)))
 model.add(Dropout(rate=dropout))
+model.add(Dense(1024, activation="relu"))
 model.add(Dense(21, activation="softmax"))
 adam = Adam()
-model.compile(optimizer=adam,
+rmsprop = RMSprop()
+model.compile(optimizer=rmsprop,
               loss="mse",
               metrics=["acc"])
 model.summary()

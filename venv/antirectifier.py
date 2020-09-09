@@ -81,6 +81,8 @@ model.compile(loss='categorical_crossentropy',
               optimizer='rmsprop',
               metrics=['accuracy'])
 
+model.summary()
+
 # 训练模型
 model.fit(x_train, y_train,
           batch_size=batch_size,

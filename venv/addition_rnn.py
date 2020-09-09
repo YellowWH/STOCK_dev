@@ -58,7 +58,7 @@ class colors:
 
 
 # 模型和数据的参数
-TRAINING_SIZE = 4
+TRAINING_SIZE = 10000
 DIGITS = 3
 REVERSE = True
 
@@ -68,6 +68,13 @@ MAXLEN = DIGITS + 1 + DIGITS
 # 所有的数字，加上符号，以及用于填充的空格。
 chars = '0123456789+ '
 ctable = CharacterTable(chars)
+
+# 可以尝试更改为 GRU, 或 SimpleRNN。
+RNN = layers.LSTM
+HIDDEN_SIZE = 128
+BATCH_SIZE = 128
+LAYERS = 1
+
 
 questions = []
 expected = []
@@ -124,11 +131,7 @@ print('Validation Data:')
 print(x_val.shape)
 print(y_val.shape)
 
-# 可以尝试更改为 GRU, 或 SimpleRNN。
-RNN = layers.LSTM
-HIDDEN_SIZE = 128
-BATCH_SIZE = 128
-LAYERS = 1
+
 
 print('Build model...')
 model = Sequential()
